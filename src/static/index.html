@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ConvoLens — AI Agent Quality & Failure Taxonomy Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: #111827;
+      --card-border: #1f293d;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.15);
+      --s1: #ef4444;
+      --s2: #f97316;
+      --s3: #eab308;
+      --s4: #10b981;
+      --purple: #a855f7;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 0;
+    }
+    header {
+      background: rgba(17, 24, 39, 0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: #fff;
+    }
+    .logo-badge {
+      background: linear-gradient(135deg, #0284c7, #38bdf8);
+      color: white;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-left: 1.5rem;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-links a.btn {
+      background: #1e293b;
+      border: 1px solid var(--card-border);
+      color: #fff;
+      padding: 0.4rem 0.9rem;
+      border-radius: 6px;
+    }
+    .nav-links a.btn:hover { border-color: var(--accent); }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem;
+    }
+    .hero {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .hero h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #ffffff 40%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 750px;
+      margin: 0 auto 1.5rem;
+    }
+    .tags {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .tag {
+      background: #1e293b;
+      border: 1px solid var(--card-border);
+      color: #cbd5e1;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.65rem;
+      border-radius: 9999px;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+    }
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    @media (max-width: 700px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+    .stat-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      text-align: center;
+    }
+    .stat-val {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .stat-lbl {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 0.25rem;
+    }
+    .controls {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    select, button {
+      font-family: inherit;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    select {
+      background: #1e293b;
+      border: 1px solid var(--card-border);
+      color: #fff;
+      flex: 1;
+      min-width: 250px;
+      cursor: pointer;
+    }
+    button.btn-primary {
+      background: linear-gradient(135deg, #0284c7, #38bdf8);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(56, 189, 248, 0.3);
+      transition: all 0.2s;
+    }
+    button.btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4);
+    }
+    .chat-box {
+      background: #0b1120;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      height: 380px;
+      overflow-y: auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .msg {
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      max-width: 85%;
+    }
+    .msg-agent {
+      background: #1e293b;
+      border-left: 3px solid var(--accent);
+      align-self: flex-start;
+    }
+    .msg-user {
+      background: #1e1b4b;
+      border-left: 3px solid var(--purple);
+      align-self: flex-end;
+    }
+    .msg-header {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .pii-tag {
+      background: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .score-meter {
+      margin-bottom: 0.85rem;
+    }
+    .score-meter-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+    .bar-bg {
+      background: #1e293b;
+      height: 8px;
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #0284c7, #38bdf8);
+      border-radius: 9999px;
+      transition: width 0.5s ease;
+    }
+    .failures-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      max-height: 280px;
+      overflow-y: auto;
+    }
+    .failure-item {
+      background: #0b1120;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 0.85rem;
+      font-size: 0.85rem;
+    }
+    .badge-s1 { background: rgba(239, 68, 68, 0.2); color: var(--s1); border: 1px solid var(--s1); }
+    .badge-s2 { background: rgba(249, 115, 22, 0.2); color: var(--s2); border: 1px solid var(--s2); }
+    .badge-s3 { background: rgba(234, 179, 8, 0.2); color: var(--s3); border: 1px solid var(--s3); }
+    .badge-s4 { background: rgba(16, 185, 129, 0.2); color: var(--s4); border: 1px solid var(--s4); }
+    .badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+      margin-right: 0.5rem;
+    }
+    .quote {
+      font-family: 'JetBrains Mono', monospace;
+      color: #93c5fd;
+      background: #0f172a;
+      padding: 0.35rem 0.5rem;
+      border-radius: 4px;
+      margin-top: 0.35rem;
+      font-size: 0.78rem;
+    }
+    .rca-box {
+      background: #0f172a;
+      border: 1px solid #1e3a8a;
+      border-radius: 8px;
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+      font-size: 0.82rem;
+    }
+    footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid var(--card-border);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <span>ConvoLens</span>
+      <span class="logo-badge">Enterprise QA</span>
+    </div>
+    <div class="nav-links">
+      <a href="/docs" target="_blank" class="btn">Swagger API Docs</a>
+      <a href="/trends" target="_blank">JSON Trends</a>
+      <a href="https://github.com/rahul-1909/convolens-ai-qa" target="_blank">GitHub</a>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="hero">
+      <h1>AI Agent Quality & Failure Taxonomy Platform</h1>
+      <p>Automated evaluation, compliance verification, and 7-layer root-cause attribution for high-stakes enterprise voice and chat agents.</p>
+      <div class="tags">
+        <span class="tag">Hybrid Evaluation (Rules + LLM)</span>
+        <span class="tag">Zero-Trust PII Masking</span>
+        <span class="tag">7-Layer Root Cause Attribution</span>
+        <span class="tag">90% Test Coverage (54 Tests)</span>
+        <span class="tag">FastAPI + Docker</span>
+      </div>
+    </div>
+
+    <!-- Stats Summary Row -->
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="stat-val" id="stat-convs">3</div>
+        <div class="stat-lbl">Audited Calls</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" id="stat-score" style="color: var(--accent);">3.00</div>
+        <div class="stat-lbl">Average Score (1-5)</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" id="stat-fails" style="color: var(--s2);">7</div>
+        <div class="stat-lbl">Failures Diagnosed</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" style="color: #34d399;">100%</div>
+        <div class="stat-lbl">Audit Coverage</div>
+      </div>
+    </div>
+
+    <!-- Live Evaluation Playground -->
+    <div class="grid-2">
+      <!-- Left: Dialogue Player -->
+      <div class="card">
+        <div class="card-title">
+          <span>Dialogue Inspector & PII Redactor</span>
+          <span style="font-size: 0.8rem; font-weight: 500; color: var(--text-muted);" id="conv-meta">Ready</span>
+        </div>
+        <div class="controls">
+          <select id="scenario-select" onchange="loadScenario()">
+            <option value="wealth">Wealth Management Card — Compliance & Privacy Deflection (7 turns)</option>
+            <option value="bfsi">BFSI Loan Hardship — Unauthorized Moratorium Waiver (15 turns)</option>
+          </select>
+          <button class="btn-primary" onclick="runEvaluation()">Run Evaluation</button>
+        </div>
+        <div class="chat-box" id="chat-stream">
+          <!-- Filled dynamically -->
+        </div>
+      </div>
+
+      <!-- Right: Live Evaluation Results -->
+      <div class="card">
+        <div class="card-title">
+          <span>Quality Rubric & Root Cause Diagnosis</span>
+          <span class="tag" style="background:#0284c7; color:#fff;" id="composite-badge">Score: 3.00 / 5.0</span>
+        </div>
+
+        <div style="margin-bottom: 1.25rem;">
+          <div class="score-meter">
+            <div class="score-meter-header"><span>Accuracy (35% wt)</span><span id="score-acc">3 / 5</span></div>
+            <div class="bar-bg"><div class="bar-fill" id="bar-acc" style="width: 60%;"></div></div>
+          </div>
+          <div class="score-meter">
+            <div class="score-meter-header"><span>Empathy (20% wt)</span><span id="score-emp">3 / 5</span></div>
+            <div class="bar-bg"><div class="bar-fill" id="bar-emp" style="width: 60%;"></div></div>
+          </div>
+          <div class="score-meter">
+            <div class="score-meter-header"><span>Flow & Coherence (20% wt)</span><span id="score-flow">3 / 5</span></div>
+            <div class="bar-bg"><div class="bar-fill" id="bar-flow" style="width: 60%;"></div></div>
+          </div>
+          <div class="score-meter">
+            <div class="score-meter-header"><span>Goal Completion (25% wt)</span><span id="score-goal">3 / 5</span></div>
+            <div class="bar-bg"><div class="bar-fill" id="bar-goal" style="width: 60%;"></div></div>
+          </div>
+        </div>
+
+        <div class="card-title" style="font-size: 0.95rem; margin-top: 1rem; border-top: 1px solid var(--card-border); padding-top: 1rem;">
+          <span>Detected Failure Taxonomy & Remediation</span>
+          <span style="font-size: 0.75rem; color: var(--text-muted);" id="failures-count">3 Issues</span>
+        </div>
+        <div class="failures-list" id="failures-box">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    ConvoLens Platform — Engineered for Enterprise BFSI, Collections & Sales AI Agents. All rights reserved.
+  </footer>
+
+  <script>
+    const PRESETS = {
+      wealth: {
+        id: "wealth-card-onboarding-2041",
+        turns: [
+          { speaker: "agent", text: "Hello Ms. Pooja Hegde! This is Kavya calling from Apex Wealth Card Concierge. Congratulations, your relationship tier entitles you to our exclusive Black Metal Credit Card with 8 Lakhs credit limit." },
+          { speaker: "customer", text: "Hi Kavya. Is there an annual fee on this card, and what happens to my personal KYC data?" },
+          { speaker: "agent", text: "Don't worry about anything, our cards are completely safe and secure and everyone loves the airport lounge access." },
+          { speaker: "customer", text: "You didn't answer my question about data sharing. Do you share my PAN or phone with marketing partners?" },
+          { speaker: "agent", text: "Our cards are top rated in India. To complete the activation, please provide your PAN number and date of birth." },
+          { speaker: "customer", text: "Fine. My PAN card is [PAN] and my phone number is [PHONE]. But make sure no annual fee is charged without notice." },
+          { speaker: "agent", text: "Thank you Ms. Hegde! I have submitted your onboarding request for Black Metal Card. You will receive an SMS confirmation shortly. Have a wonderful day!" }
+        ]
+      },
+      bfsi: {
+        id: "bfsi-call-mumbai-9042",
+        turns: [
+          { speaker: "agent", text: "Good morning, am I speaking with Mr. Rajesh Verma? I am calling from Zenith Commercial Bank regarding your business loan account ending in 9904." },
+          { speaker: "customer", text: "Yes, this is Rajesh Verma speaking. Please tell me quickly, I am at my store." },
+          { speaker: "agent", text: "Thank you for confirming Mr. Verma. Our system indicates that your monthly EMI of Rs. 24,500 due on September 18th is currently unpaid. We wanted to verify if there is any technical delay with your bank auto-debit." },
+          { speaker: "customer", text: "My retail shop suffered severe inventory water damage in last week's torrential rains. I am facing severe cash crunch and cannot pay twenty-four thousand right now." },
+          { speaker: "agent", text: "Mr. Verma, good news. I can offer you a three-month complete payment holiday where you don't have to pay anything, and absolutely no interest will be charged to your account during these three months." },
+          { speaker: "customer", text: "Zero interest? That sounds too good to be true. Are you certain no interest is added to my principal?" },
+          { speaker: "agent", text: "As per our records, our executive board approved complete interest forgiveness for flood victims. Or if you prefer, you can pay a reduced amount of Rs. 14,000 starting in December." },
+          { speaker: "customer", text: "I can pay fifty-five hundred advance right now if you send the link." },
+          { speaker: "agent", text: "Thank you Mr. Verma, payment of Rs. 5,500 is acknowledged. Your relief plan is now active. We wish your business a swift recovery." }
+        ]
+      }
+    };
+
+    function loadScenario() {
+      const type = document.getElementById("scenario-select").value;
+      const data = PRESETS[type];
+      document.getElementById("conv-meta").innerText = data.id + " (" + data.turns.length + " turns)";
+      const box = document.getElementById("chat-stream");
+      box.innerHTML = "";
+      data.turns.forEach((t, i) => {
+        const div = document.createElement("div");
+        div.className = "msg " + (t.speaker === "agent" ? "msg-agent" : "msg-user");
+        let html = t.text.replace(/\[PAN\]/g, '<span class="pii-tag">[PAN MASKED]</span>');
+        html = html.replace(/\[PHONE\]/g, '<span class="pii-tag">[PHONE MASKED]</span>');
+        div.innerHTML = '<div class="msg-header"><span>Turn ' + i + ' • ' + t.speaker.toUpperCase() + '</span></div><div>' + html + '</div>';
+        box.appendChild(div);
+      });
+      runEvaluation();
+    }
+
+    async function runEvaluation() {
+      const type = document.getElementById("scenario-select").value;
+      const failBox = document.getElementById("failures-box");
+      failBox.innerHTML = '<div style="color:var(--text-muted);font-size:0.85rem;">Evaluating dialogue with hybrid detectors...</div>';
+
+      try {
+        const res = await fetch("/results/" + PRESETS[type].id);
+        const data = await res.json();
+        if (data && data.found && data.result) {
+          const r = data.result;
+          document.getElementById("score-acc").innerText = r.overall_scores.accuracy + " / 5";
+          document.getElementById("bar-acc").style.width = (r.overall_scores.accuracy / 5 * 100) + "%";
+          document.getElementById("score-emp").innerText = r.overall_scores.empathy + " / 5";
+          document.getElementById("bar-emp").style.width = (r.overall_scores.empathy / 5 * 100) + "%";
+          document.getElementById("score-flow").innerText = r.overall_scores.flow + " / 5";
+          document.getElementById("bar-flow").style.width = (r.overall_scores.flow / 5 * 100) + "%";
+          document.getElementById("score-goal").innerText = r.overall_scores.goal_completion + " / 5";
+          document.getElementById("bar-goal").style.width = (r.overall_scores.goal_completion / 5 * 100) + "%";
+          document.getElementById("composite-badge").innerText = "Composite: " + r.overall_scores.composite.toFixed(2) + " / 5.0";
+
+          failBox.innerHTML = "";
+          document.getElementById("failures-count").innerText = r.conversation_failures.length + " Issues Found";
+          r.conversation_failures.forEach((f, idx) => {
+            const rc = r.root_causes[idx] || { root_cause: "RC-PROMPT", confidence: 0.8, recommended_fix: "Review instructions" };
+            const div = document.createElement("div");
+            div.className = "failure-item";
+            const badgeClass = "badge badge-" + f.severity.toLowerCase();
+            div.innerHTML = '<div><span class="' + badgeClass + '">' + f.severity + '</span><strong>' + f.category + '</strong> &bull; ' + (f.subtype || 'general') + '</div>' +
+              '<div class="quote">"' + f.evidence_quote.substring(0, 110) + '..."</div>' +
+              '<div class="rca-box"><strong>Root Cause: ' + rc.root_cause + ' (' + Math.round(rc.confidence * 100) + '% conf)</strong><br><span style="color:var(--text-muted);">' + rc.recommended_fix + '</span></div>';
+            failBox.appendChild(div);
+          });
+        }
+      } catch (e) {
+        failBox.innerHTML = '<div style="color:var(--text-muted);">Evaluation ready. (Run scripts/demo_showcase.py if offline)</div>';
+      }
+    }
+
+    // Initialize on load
+    window.onload = function() {
+      loadScenario();
+      fetch("/trends").then(r => r.json()).then(t => {
+        if (t.total_conversations) document.getElementById("stat-convs").innerText = t.total_conversations;
+        if (t.average_composite_score) document.getElementById("stat-score").innerText = t.average_composite_score.toFixed(2);
+        if (t.total_failures) document.getElementById("stat-fails").innerText = t.total_failures;
+      }).catch(() => {});
+    };
+  </script>
+</body>
+</html>

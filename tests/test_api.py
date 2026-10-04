@@ -30,12 +30,11 @@ def test_health_check(client):
 
 
 def test_root_endpoint(client):
-    """GET / should return basic platform info."""
+    """GET / should return unified dashboard HTML."""
     response = client.get("/")
     assert response.status_code == 200
-    data = response.json()
-    assert data["app"] == "ConvoLens"
-    assert data["docs"] == "/docs"
+    assert "ConvoLens" in response.text
+    assert "/docs" in response.text
 
 
 def test_evaluate_conversation_endpoint(client, sample_conversation):

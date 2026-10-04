@@ -8,8 +8,10 @@ from __future__ import annotations
 
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
+from pathlib import Path
 
 from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
 
 from src import __version__
 from src.config import get_settings
@@ -25,15 +27,14 @@ from src.schemas.api import HealthResponse
 
 setup_logging()
 _settings = get_settings()
+_STATIC_INDEX = Path(__file__).resolve().parent / "static" / "index.html"
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application startup and shutdown lifecycle."""
-    # Startup: create database tables
     init_db()
     yield
-    # Shutdown: cleanup resources if needed
 
 
 # ── App Factory ──────────────────────────────────────────────────────────────
@@ -62,14 +63,14 @@ app.include_router(trends_router)
 # ── Root / Health ────────────────────────────────────────────────────────────
 
 
-@app.get("/", tags=["health"])
+@app.get("/", response_class=HTMLResponse, tags=["dashboard"])
 def root():
-    """Landing redirect to docs."""
-    return {
-        "app": "ConvoLens",
-        "version": __version__,
-        "docs": "/docs",
-    }
+    """Single unified showcase dashboard with live interactive evaluation."""
+    if _STATIC_INDEX.exists():
+        return HTMLResponse(content=_STATIC_INDEX.read_text(encoding="utf-8"))
+    return HTMLResponse(
+        f"<h1>ConvoLens v{__version__}</h1><p><a href='/docs'>Swagger API Docs</a></p>"
+    )
 
 
 @app.get("/health", response_model=HealthResponse, tags=["health"])
