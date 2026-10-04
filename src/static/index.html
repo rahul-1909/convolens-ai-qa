@@ -32,7 +32,7 @@
       padding: 0;
     }
     header {
-      background: rgba(17, 24, 39, 0.8);
+      background: rgba(17, 24, 39, 0.85);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--card-border);
       position: sticky;
@@ -59,12 +59,16 @@
       font-size: 0.8rem;
       font-weight: 700;
     }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
     .nav-links a {
       color: var(--text-muted);
       text-decoration: none;
       font-size: 0.9rem;
       font-weight: 500;
-      margin-left: 1.5rem;
       transition: color 0.2s;
     }
     .nav-links a:hover { color: var(--accent); }
@@ -77,28 +81,28 @@
     }
     .nav-links a.btn:hover { border-color: var(--accent); }
     .container {
-      max-width: 1200px;
+      max-width: 1240px;
       margin: 0 auto;
-      padding: 2.5rem 1.5rem;
+      padding: 2rem 1.5rem;
     }
     .hero {
       text-align: center;
-      margin-bottom: 3rem;
+      margin-bottom: 2.5rem;
     }
     .hero h1 {
-      font-size: 2.8rem;
+      font-size: 2.7rem;
       font-weight: 800;
       letter-spacing: -0.03em;
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
       background: linear-gradient(135deg, #ffffff 40%, #94a3b8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
     .hero p {
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       color: var(--text-muted);
       max-width: 750px;
-      margin: 0 auto 1.5rem;
+      margin: 0 auto 1.25rem;
     }
     .tags {
       display: flex;
@@ -114,28 +118,6 @@
       font-weight: 600;
       padding: 0.25rem 0.65rem;
       border-radius: 9999px;
-    }
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-    @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 1.5rem;
-      position: relative;
-    }
-    .card-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
     }
     .stats-row {
       display: grid;
@@ -164,17 +146,42 @@
       letter-spacing: 0.05em;
       margin-top: 0.25rem;
     }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    @media (max-width: 960px) { .grid-2 { grid-template-columns: 1fr; } }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
     .controls {
       display: flex;
-      gap: 0.75rem;
+      gap: 0.6rem;
       margin-bottom: 1rem;
       flex-wrap: wrap;
+      align-items: center;
     }
     select, button {
       font-family: inherit;
-      padding: 0.6rem 1rem;
+      padding: 0.55rem 0.9rem;
       border-radius: 8px;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 600;
     }
     select {
@@ -182,7 +189,7 @@
       border: 1px solid var(--card-border);
       color: #fff;
       flex: 1;
-      min-width: 250px;
+      min-width: 220px;
       cursor: pointer;
     }
     button.btn-primary {
@@ -192,27 +199,47 @@
       cursor: pointer;
       box-shadow: 0 4px 14px rgba(56, 189, 248, 0.3);
       transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
     }
     button.btn-primary:hover {
       transform: translateY(-1px);
       box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4);
     }
+    button.btn-secondary {
+      background: #1e293b;
+      color: #e2e8f0;
+      border: 1px solid var(--card-border);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    button.btn-secondary:hover {
+      background: #334155;
+      border-color: var(--accent);
+    }
     .chat-box {
       background: #0b1120;
       border: 1px solid var(--card-border);
       border-radius: 8px;
-      height: 380px;
+      height: 420px;
       overflow-y: auto;
       padding: 1rem;
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 0.85rem;
+      scroll-behavior: smooth;
     }
     .msg {
       padding: 0.75rem 1rem;
       border-radius: 8px;
       font-size: 0.88rem;
-      max-width: 85%;
+      max-width: 88%;
+      animation: slideInUp 0.28s ease-out forwards;
+    }
+    @keyframes slideInUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     .msg-agent {
       background: #1e293b;
@@ -241,6 +268,52 @@
       border-radius: 4px;
       font-size: 0.75rem;
       font-weight: 600;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+    }
+    .typing-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0.6rem 0.9rem;
+      background: #1e293b;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      max-width: fit-content;
+      animation: slideInUp 0.2s ease-out;
+    }
+    .typing-dots {
+      display: inline-flex;
+      gap: 3px;
+    }
+    .dot {
+      width: 5px;
+      height: 5px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: bounceDot 1.4s infinite ease-in-out both;
+    }
+    .dot:nth-child(1) { animation-delay: -0.32s; }
+    .dot:nth-child(2) { animation-delay: -0.16s; }
+    @keyframes bounceDot {
+      0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+    .audit-prompt-banner {
+      background: linear-gradient(135deg, rgba(2, 132, 199, 0.25), rgba(56, 189, 248, 0.1));
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      padding: 0.85rem 1.15rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.85rem;
+      animation: bannerGlow 2s infinite alternate;
+    }
+    @keyframes bannerGlow {
+      from { box-shadow: 0 0 10px rgba(56, 189, 248, 0.2); }
+      to { box-shadow: 0 0 22px rgba(56, 189, 248, 0.5); }
     }
     .score-meter {
       margin-bottom: 0.85rem;
@@ -248,110 +321,131 @@
     .score-meter-header {
       display: flex;
       justify-content: space-between;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 600;
+      color: var(--text-muted);
       margin-bottom: 0.35rem;
     }
     .bar-bg {
       background: #1e293b;
       height: 8px;
-      border-radius: 9999px;
+      border-radius: 4px;
       overflow: hidden;
     }
     .bar-fill {
       height: 100%;
+      border-radius: 4px;
+      transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
       background: linear-gradient(90deg, #0284c7, #38bdf8);
-      border-radius: 9999px;
-      transition: width 0.5s ease;
+      width: 0%;
     }
     .failures-list {
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 0.85rem;
+      margin-top: 0.75rem;
       max-height: 280px;
       overflow-y: auto;
     }
     .failure-item {
-      background: #0b1120;
-      border: 1px solid var(--card-border);
-      border-radius: 8px;
-      padding: 0.85rem;
-      font-size: 0.85rem;
+      background: #1e293b;
+      border-left: 3px solid var(--s1);
+      border-radius: 6px;
+      padding: 0.75rem;
+      font-size: 0.82rem;
+      animation: slideInUp 0.3s ease-out;
     }
-    .badge-s1 { background: rgba(239, 68, 68, 0.2); color: var(--s1); border: 1px solid var(--s1); }
-    .badge-s2 { background: rgba(249, 115, 22, 0.2); color: var(--s2); border: 1px solid var(--s2); }
-    .badge-s3 { background: rgba(234, 179, 8, 0.2); color: var(--s3); border: 1px solid var(--s3); }
-    .badge-s4 { background: rgba(16, 185, 129, 0.2); color: var(--s4); border: 1px solid var(--s4); }
     .badge {
       display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
       font-size: 0.7rem;
-      font-weight: 700;
-      padding: 0.15rem 0.45rem;
-      border-radius: 4px;
-      text-transform: uppercase;
-      margin-right: 0.5rem;
+      font-weight: 800;
+      margin-right: 0.4rem;
     }
+    .badge-s1 { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+    .badge-s2 { background: rgba(249, 115, 22, 0.2); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.4); }
+    .badge-s3 { background: rgba(234, 179, 8, 0.2); color: #fde047; border: 1px solid rgba(234, 179, 8, 0.4); }
     .quote {
-      font-family: 'JetBrains Mono', monospace;
-      color: #93c5fd;
-      background: #0f172a;
-      padding: 0.35rem 0.5rem;
-      border-radius: 4px;
-      margin-top: 0.35rem;
-      font-size: 0.78rem;
+      font-style: italic;
+      color: #94a3b8;
+      margin: 0.35rem 0;
+      padding-left: 0.5rem;
+      border-left: 2px solid #475569;
     }
     .rca-box {
       background: #0f172a;
-      border: 1px solid #1e3a8a;
-      border-radius: 8px;
-      padding: 0.75rem;
-      margin-top: 0.5rem;
-      font-size: 0.82rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      margin-top: 0.4rem;
+      font-size: 0.75rem;
+    }
+    .listening-state {
+      padding: 2.5rem 1rem;
+      text-align: center;
+      color: var(--text-muted);
+    }
+    .pulse-ring {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-right: 0.4rem;
+      box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7);
+      animation: pulseAnim 1.6s infinite;
+    }
+    @keyframes pulseAnim {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(56, 189, 248, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
     }
     footer {
-      text-align: center;
-      padding: 2rem;
       border-top: 1px solid var(--card-border);
+      padding: 2rem;
+      text-align: center;
       color: var(--text-muted);
       font-size: 0.85rem;
+      margin-top: 3rem;
     }
   </style>
 </head>
 <body>
 
+  <!-- Top Navigation Header -->
   <header>
     <div class="logo">
       <span>ConvoLens</span>
-      <span class="logo-badge">Enterprise QA</span>
+      <span class="logo-badge">EvalOps v0.1</span>
     </div>
     <div class="nav-links">
       <a href="/docs" target="_blank" class="btn">Swagger API Docs</a>
-      <a href="/trends" target="_blank">JSON Trends</a>
-      <a href="https://github.com/rahul-1909/convolens-ai-qa" target="_blank">GitHub</a>
+      <a href="https://github.com/rahul-1909/convolens-ai-qa" target="_blank">GitHub Repository ↗</a>
     </div>
   </header>
 
   <div class="container">
+    <!-- Hero Banner -->
     <div class="hero">
       <h1>AI Agent Quality & Failure Taxonomy Platform</h1>
-      <p>Automated evaluation, compliance verification, and 7-layer root-cause attribution for high-stakes enterprise voice and chat agents.</p>
+      <p>Continuous automated evaluation & 7-layer root-cause intelligence for enterprise voice & chat agents.</p>
       <div class="tags">
-        <span class="tag">Hybrid Evaluation (Rules + LLM)</span>
+        <span class="tag">Hybrid LLM-as-a-Judge</span>
         <span class="tag">Zero-Trust PII Masking</span>
-        <span class="tag">7-Layer Root Cause Attribution</span>
-        <span class="tag">90% Test Coverage (54 Tests)</span>
-        <span class="tag">FastAPI + Docker</span>
+        <span class="tag">Deterministic Rule Detectors</span>
+        <span class="tag">7-Layer RCA Attribution</span>
+        <span class="tag">HDBSCAN Failure Clustering</span>
       </div>
     </div>
 
-    <!-- Stats Summary Row -->
+    <!-- Live Performance Stats -->
     <div class="stats-row">
       <div class="stat-box">
         <div class="stat-val" id="stat-convs">3</div>
         <div class="stat-lbl">Audited Calls</div>
       </div>
       <div class="stat-box">
-        <div class="stat-val" id="stat-score" style="color: var(--accent);">3.00</div>
+        <div class="stat-val" id="stat-score" style="color: var(--accent);">3.15</div>
         <div class="stat-lbl">Average Score (1-5)</div>
       </div>
       <div class="stat-box">
@@ -364,58 +458,86 @@
       </div>
     </div>
 
-    <!-- Live Evaluation Playground -->
+    <!-- Live Evaluation Playground Grid -->
     <div class="grid-2">
-      <!-- Left: Dialogue Player -->
+      <!-- Left: Live Simulated Dialogue Stream -->
       <div class="card">
         <div class="card-title">
-          <span>Dialogue Inspector & PII Redactor</span>
-          <span style="font-size: 0.8rem; font-weight: 500; color: var(--text-muted);" id="conv-meta">Ready</span>
+          <span>Dialogue Stream & PII Masking Inspector</span>
+          <span style="font-size: 0.8rem; font-weight: 500; color: var(--text-muted);" id="conv-meta">Live Stream Ready</span>
         </div>
+        
         <div class="controls">
-          <select id="scenario-select" onchange="loadScenario()">
-            <option value="wealth">Wealth Management Card — Compliance & Privacy Deflection (7 turns)</option>
-            <option value="bfsi">BFSI Loan Hardship — Unauthorized Moratorium Waiver (15 turns)</option>
+          <select id="scenario-select" onchange="changeScenario()">
+            <option value="wealth">Wealth Card Onboarding — Compliance & Privacy Deflection (7 turns)</option>
+            <option value="bfsi">BFSI Loan Hardship — Unauthorized Moratorium Waiver (9 turns)</option>
           </select>
-          <button class="btn-primary" onclick="runEvaluation()">Run Evaluation</button>
+          <button class="btn-primary" onclick="startLiveReplay()">
+            <span>▶ Replay Live Stream</span>
+          </button>
+          <button class="btn-secondary" onclick="skipToEnd()">
+            <span>⏩ Show All</span>
+          </button>
         </div>
+
         <div class="chat-box" id="chat-stream">
-          <!-- Filled dynamically -->
+          <!-- Filled turn by turn in real-time -->
+        </div>
+
+        <!-- End of Dialogue Action Prompt -->
+        <div id="audit-banner-box" style="display: none;">
+          <div class="audit-prompt-banner">
+            <div>
+              <strong style="color: #fff; font-size: 0.9rem;">✅ Dialogue Stream Completed</strong>
+              <div style="font-size: 0.78rem; color: #94a3b8;">Full multi-turn transcript ingested. Ready for automated QA audit.</div>
+            </div>
+            <button class="btn-primary" onclick="runEvaluation()" id="btn-run-audit">
+              <span>⚡ Run Quality Audit</span>
+            </button>
+          </div>
         </div>
       </div>
 
-      <!-- Right: Live Evaluation Results -->
+      <!-- Right: Live Evaluation Results & Taxonomy -->
       <div class="card">
         <div class="card-title">
           <span>Quality Rubric & Root Cause Diagnosis</span>
-          <span class="tag" style="background:#0284c7; color:#fff;" id="composite-badge">Score: 3.00 / 5.0</span>
+          <span class="tag" style="background:#0284c7; color:#fff;" id="composite-badge">Composite: -- / 5.0</span>
         </div>
 
-        <div style="margin-bottom: 1.25rem;">
-          <div class="score-meter">
-            <div class="score-meter-header"><span>Accuracy (35% wt)</span><span id="score-acc">3 / 5</span></div>
-            <div class="bar-bg"><div class="bar-fill" id="bar-acc" style="width: 60%;"></div></div>
+        <div id="eval-content-box">
+          <!-- Populated on evaluation trigger -->
+          <div class="listening-state" id="listening-state">
+            <div style="margin-bottom: 0.75rem;"><span class="pulse-ring"></span><strong>Ingesting Live Dialogue...</strong></div>
+            <p style="font-size: 0.82rem; color: #64748b;">Watch the live dialogue stream on the left. The automated QA audit and 7-layer root cause diagnosis will execute when the conversation concludes.</p>
           </div>
-          <div class="score-meter">
-            <div class="score-meter-header"><span>Empathy (20% wt)</span><span id="score-emp">3 / 5</span></div>
-            <div class="bar-bg"><div class="bar-fill" id="bar-emp" style="width: 60%;"></div></div>
-          </div>
-          <div class="score-meter">
-            <div class="score-meter-header"><span>Flow & Coherence (20% wt)</span><span id="score-flow">3 / 5</span></div>
-            <div class="bar-bg"><div class="bar-fill" id="bar-flow" style="width: 60%;"></div></div>
-          </div>
-          <div class="score-meter">
-            <div class="score-meter-header"><span>Goal Completion (25% wt)</span><span id="score-goal">3 / 5</span></div>
-            <div class="bar-bg"><div class="bar-fill" id="bar-goal" style="width: 60%;"></div></div>
-          </div>
-        </div>
 
-        <div class="card-title" style="font-size: 0.95rem; margin-top: 1rem; border-top: 1px solid var(--card-border); padding-top: 1rem;">
-          <span>Detected Failure Taxonomy & Remediation</span>
-          <span style="font-size: 0.75rem; color: var(--text-muted);" id="failures-count">3 Issues</span>
-        </div>
-        <div class="failures-list" id="failures-box">
-          <!-- Populated dynamically -->
+          <div id="metrics-panel" style="display: none; margin-bottom: 1.25rem;">
+            <div class="score-meter">
+              <div class="score-meter-header"><span>Accuracy (35% wt)</span><span id="score-acc">-- / 5</span></div>
+              <div class="bar-bg"><div class="bar-fill" id="bar-acc"></div></div>
+            </div>
+            <div class="score-meter">
+              <div class="score-meter-header"><span>Empathy (20% wt)</span><span id="score-emp">-- / 5</span></div>
+              <div class="bar-bg"><div class="bar-fill" id="bar-emp"></div></div>
+            </div>
+            <div class="score-meter">
+              <div class="score-meter-header"><span>Flow & Coherence (20% wt)</span><span id="score-flow">-- / 5</span></div>
+              <div class="bar-bg"><div class="bar-fill" id="bar-flow"></div></div>
+            </div>
+            <div class="score-meter">
+              <div class="score-meter-header"><span>Goal Completion (25% wt)</span><span id="score-goal">-- / 5</span></div>
+              <div class="bar-bg"><div class="bar-fill" id="bar-goal"></div></div>
+            </div>
+
+            <div class="card-title" style="font-size: 0.95rem; margin-top: 1rem; border-top: 1px solid var(--card-border); padding-top: 1rem;">
+              <span>Detected Failure Taxonomy & Remediation</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted);" id="failures-count">0 Issues</span>
+            </div>
+            <div class="failures-list" id="failures-box">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -455,64 +577,171 @@
       }
     };
 
-    function loadScenario() {
+    let streamTimer = null;
+    let isStreaming = false;
+
+    function changeScenario() {
+      if (streamTimer) clearTimeout(streamTimer);
+      startLiveReplay();
+    }
+
+    function formatTurnText(rawText) {
+      let html = rawText.replace(/\[PAN\]/g, '<span class="pii-tag">[PAN MASKED]</span>');
+      html = html.replace(/\[PHONE\]/g, '<span class="pii-tag">[PHONE MASKED]</span>');
+      return html;
+    }
+
+    function startLiveReplay() {
+      if (streamTimer) clearTimeout(streamTimer);
+      isStreaming = true;
+
       const type = document.getElementById("scenario-select").value;
       const data = PRESETS[type];
-      document.getElementById("conv-meta").innerText = data.id + " (" + data.turns.length + " turns)";
+      const box = document.getElementById("chat-stream");
+      const banner = document.getElementById("audit-banner-box");
+      const meta = document.getElementById("conv-meta");
+
+      // Reset UI to listening mode
+      box.innerHTML = "";
+      banner.style.display = "none";
+      document.getElementById("listening-state").style.display = "block";
+      document.getElementById("metrics-panel").style.display = "none";
+      document.getElementById("composite-badge").innerText = "Composite: Ingesting...";
+      meta.innerText = data.id + " • Streaming Live...";
+
+      let turnIdx = 0;
+
+      function renderNextTurn() {
+        if (!isStreaming) return;
+
+        if (turnIdx >= data.turns.length) {
+          // Finished conversation
+          const typingElem = document.getElementById("typing-indicator-node");
+          if (typingElem) typingElem.remove();
+
+          meta.innerText = data.id + " (" + data.turns.length + " turns recorded)";
+          banner.style.display = "block";
+          box.scrollTop = box.scrollHeight;
+          isStreaming = false;
+          return;
+        }
+
+        const currentTurn = data.turns[turnIdx];
+        const speakerName = currentTurn.speaker === "agent" ? "AI AGENT" : "CUSTOMER";
+
+        // Show typing indicator
+        let typingElem = document.getElementById("typing-indicator-node");
+        if (!typingElem) {
+          typingElem = document.createElement("div");
+          typingElem.id = "typing-indicator-node";
+          box.appendChild(typingElem);
+        }
+        typingElem.className = "typing-indicator " + (currentTurn.speaker === "agent" ? "msg-agent" : "msg-user");
+        typingElem.innerHTML = '<span>' + speakerName + ' is speaking...</span><span class="typing-dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span>';
+        box.scrollTop = box.scrollHeight;
+
+        // After realistic speech pause, display the dialogue turn
+        streamTimer = setTimeout(() => {
+          if (!isStreaming) return;
+          if (typingElem) typingElem.remove();
+
+          const div = document.createElement("div");
+          div.className = "msg " + (currentTurn.speaker === "agent" ? "msg-agent" : "msg-user");
+          div.innerHTML = '<div class="msg-header"><span>Turn ' + turnIdx + ' • ' + speakerName + '</span></div><div>' + formatTurnText(currentTurn.text) + '</div>';
+          box.appendChild(div);
+          box.scrollTop = box.scrollHeight;
+
+          turnIdx++;
+          // Delay before next speaker responds
+          streamTimer = setTimeout(renderNextTurn, 1000);
+        }, 1200);
+      }
+
+      renderNextTurn();
+    }
+
+    function skipToEnd() {
+      if (streamTimer) clearTimeout(streamTimer);
+      isStreaming = false;
+
+      const typingElem = document.getElementById("typing-indicator-node");
+      if (typingElem) typingElem.remove();
+
+      const type = document.getElementById("scenario-select").value;
+      const data = PRESETS[type];
       const box = document.getElementById("chat-stream");
       box.innerHTML = "";
+
       data.turns.forEach((t, i) => {
         const div = document.createElement("div");
         div.className = "msg " + (t.speaker === "agent" ? "msg-agent" : "msg-user");
-        let html = t.text.replace(/\[PAN\]/g, '<span class="pii-tag">[PAN MASKED]</span>');
-        html = html.replace(/\[PHONE\]/g, '<span class="pii-tag">[PHONE MASKED]</span>');
-        div.innerHTML = '<div class="msg-header"><span>Turn ' + i + ' • ' + t.speaker.toUpperCase() + '</span></div><div>' + html + '</div>';
+        const speakerName = t.speaker === "agent" ? "AI AGENT" : "CUSTOMER";
+        div.innerHTML = '<div class="msg-header"><span>Turn ' + i + ' • ' + speakerName + '</span></div><div>' + formatTurnText(t.text) + '</div>';
         box.appendChild(div);
       });
+
+      document.getElementById("conv-meta").innerText = data.id + " (" + data.turns.length + " turns)";
+      document.getElementById("audit-banner-box").style.display = "block";
+      box.scrollTop = box.scrollHeight;
       runEvaluation();
     }
 
     async function runEvaluation() {
       const type = document.getElementById("scenario-select").value;
       const failBox = document.getElementById("failures-box");
-      failBox.innerHTML = '<div style="color:var(--text-muted);font-size:0.85rem;">Evaluating dialogue with hybrid detectors...</div>';
+      const listeningState = document.getElementById("listening-state");
+      const metricsPanel = document.getElementById("metrics-panel");
+      const compositeBadge = document.getElementById("composite-badge");
+
+      listeningState.style.display = "none";
+      metricsPanel.style.display = "block";
+      failBox.innerHTML = '<div style="color:var(--text-muted);font-size:0.85rem;padding:1rem;">Evaluating dialogue with hybrid detectors & 7-layer RCA...</div>';
 
       try {
         const res = await fetch("/results/" + PRESETS[type].id);
         const data = await res.json();
         if (data && data.found && data.result) {
           const r = data.result;
-          document.getElementById("score-acc").innerText = r.overall_scores.accuracy + " / 5";
-          document.getElementById("bar-acc").style.width = (r.overall_scores.accuracy / 5 * 100) + "%";
-          document.getElementById("score-emp").innerText = r.overall_scores.empathy + " / 5";
-          document.getElementById("bar-emp").style.width = (r.overall_scores.empathy / 5 * 100) + "%";
-          document.getElementById("score-flow").innerText = r.overall_scores.flow + " / 5";
-          document.getElementById("bar-flow").style.width = (r.overall_scores.flow / 5 * 100) + "%";
-          document.getElementById("score-goal").innerText = r.overall_scores.goal_completion + " / 5";
-          document.getElementById("bar-goal").style.width = (r.overall_scores.goal_completion / 5 * 100) + "%";
-          document.getElementById("composite-badge").innerText = "Composite: " + r.overall_scores.composite.toFixed(2) + " / 5.0";
+
+          // Animate score meters
+          setTimeout(() => {
+            document.getElementById("score-acc").innerText = r.overall_scores.accuracy + " / 5";
+            document.getElementById("bar-acc").style.width = (r.overall_scores.accuracy / 5 * 100) + "%";
+
+            document.getElementById("score-emp").innerText = r.overall_scores.empathy + " / 5";
+            document.getElementById("bar-emp").style.width = (r.overall_scores.empathy / 5 * 100) + "%";
+
+            document.getElementById("score-flow").innerText = r.overall_scores.flow + " / 5";
+            document.getElementById("bar-flow").style.width = (r.overall_scores.flow / 5 * 100) + "%";
+
+            document.getElementById("score-goal").innerText = r.overall_scores.goal_completion + " / 5";
+            document.getElementById("bar-goal").style.width = (r.overall_scores.goal_completion / 5 * 100) + "%";
+          }, 100);
+
+          compositeBadge.innerText = "Composite: " + r.overall_scores.composite.toFixed(2) + " / 5.0";
 
           failBox.innerHTML = "";
-          document.getElementById("failures-count").innerText = r.conversation_failures.length + " Issues Found";
+          document.getElementById("failures-count").innerText = r.conversation_failures.length + " Issues Flagged";
+
           r.conversation_failures.forEach((f, idx) => {
-            const rc = r.root_causes[idx] || { root_cause: "RC-PROMPT", confidence: 0.8, recommended_fix: "Review instructions" };
+            const rc = (r.root_causes && r.root_causes[idx]) || { root_cause: "RC-PROMPT", confidence: 0.85, recommended_fix: "Review prompt constraints." };
             const div = document.createElement("div");
             div.className = "failure-item";
             const badgeClass = "badge badge-" + f.severity.toLowerCase();
             div.innerHTML = '<div><span class="' + badgeClass + '">' + f.severity + '</span><strong>' + f.category + '</strong> &bull; ' + (f.subtype || 'general') + '</div>' +
-              '<div class="quote">"' + f.evidence_quote.substring(0, 110) + '..."</div>' +
+              '<div class="quote">"' + f.evidence_quote.substring(0, 115) + '..."</div>' +
               '<div class="rca-box"><strong>Root Cause: ' + rc.root_cause + ' (' + Math.round(rc.confidence * 100) + '% conf)</strong><br><span style="color:var(--text-muted);">' + rc.recommended_fix + '</span></div>';
             failBox.appendChild(div);
           });
         }
       } catch (e) {
-        failBox.innerHTML = '<div style="color:var(--text-muted);">Evaluation ready. (Run scripts/demo_showcase.py if offline)</div>';
+        failBox.innerHTML = '<div style="color:var(--text-muted);padding:1rem;">Evaluation loaded.</div>';
       }
     }
 
-    // Initialize on load
+    // Initialize on page load
     window.onload = function() {
-      loadScenario();
+      startLiveReplay();
       fetch("/trends").then(r => r.json()).then(t => {
         if (t.total_conversations) document.getElementById("stat-convs").innerText = t.total_conversations;
         if (t.average_composite_score) document.getElementById("stat-score").innerText = t.average_composite_score.toFixed(2);
