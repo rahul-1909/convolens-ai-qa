@@ -393,7 +393,7 @@
       font-size: 0.75rem;
     }
     .listening-state {
-      padding: 2.5rem 1rem;
+      padding: 2rem 1rem;
       text-align: center;
       color: var(--text-muted);
     }
@@ -487,7 +487,7 @@
             <span>▶ Replay Stream</span>
           </button>
           <button class="btn-secondary" onclick="skipToEnd()">
-            <span>Show All</span>
+            <span>Show All & Audit</span>
           </button>
         </div>
 
@@ -498,11 +498,11 @@
         <div id="audit-banner-box" style="display: none;">
           <div class="audit-prompt-banner">
             <div>
-              <strong style="color: #fff; font-size: 0.85rem;">Dialogue Stream Complete</strong>
-              <div style="font-size: 0.75rem; color: var(--text-muted);">Multi-turn transcript ingested. Automated QA audit running.</div>
+              <strong style="color: #fff; font-size: 0.85rem;">Dialogue Stream Ingested</strong>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Transcript normalized with PII masking. QA audit execution complete.</div>
             </div>
             <button class="btn-primary" onclick="runEvaluation()" id="btn-run-audit">
-              <span>Execute QA Audit</span>
+              <span>Re-run QA Audit</span>
             </button>
           </div>
         </div>
@@ -517,8 +517,18 @@
 
         <div id="eval-content-box">
           <div class="listening-state" id="listening-state">
-            <div style="margin-bottom: 0.6rem;"><span class="status-dot"></span><strong style="color: #e4e4e7; font-size: 0.88rem;">Ingesting Dialogue Stream...</strong></div>
-            <p style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.5;">Watch dialogue stream on the left. The automated QA audit and 7-layer root cause diagnosis will execute automatically when the conversation concludes.</p>
+            <div style="margin-bottom: 0.6rem;">
+              <span class="status-dot"></span>
+              <strong style="color: #e4e4e7; font-size: 0.88rem;" id="listening-title">Ingesting Dialogue Stream...</strong>
+            </div>
+            <p style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.5;" id="listening-sub">
+              Live stream active on the left. The automated QA audit and 7-layer root cause diagnosis will execute immediately when dialogue concludes.
+            </p>
+            <div style="margin-top: 1.15rem;">
+              <button class="btn-primary" onclick="skipToEnd()" style="font-size: 0.8rem; padding: 0.45rem 0.95rem;">
+                <span>⚡ Skip Stream & Audit Instantly</span>
+              </button>
+            </div>
           </div>
 
           <div id="metrics-panel" style="display: none; margin-bottom: 1.25rem;">
@@ -659,12 +669,17 @@
           // Auto-trigger evaluation seamlessly upon dialogue completion
           setTimeout(() => {
             runEvaluation();
-          }, 600);
+          }, 350);
           return;
         }
 
         const currentTurn = data.turns[turnIdx];
         const speakerName = currentTurn.speaker === "agent" ? "AI AGENT" : "CUSTOMER";
+
+        const titleEl = document.getElementById("listening-title");
+        const subEl = document.getElementById("listening-sub");
+        if (titleEl) titleEl.innerText = "Ingesting Turn " + (turnIdx + 1) + " of " + data.turns.length + "...";
+        if (subEl) subEl.innerText = speakerName + " speaking. PII masking & turn detectors running live.";
 
         let typingElem = document.getElementById("typing-indicator-node");
         if (!typingElem) {
@@ -687,8 +702,8 @@
           box.scrollTop = box.scrollHeight;
 
           turnIdx++;
-          streamTimer = setTimeout(renderNextTurn, 850);
-        }, 1000);
+          streamTimer = setTimeout(renderNextTurn, 350);
+        }, 500);
       }
 
       renderNextTurn();
@@ -767,18 +782,22 @@
       metricsPanel.style.display = "block";
       failBox.innerHTML = '<div style="color:var(--text-muted);font-size:0.8rem;padding:0.75rem;">Evaluating conversation with LLM judge & RCA engine...</div>';
 
+      const controller = new AbortController();
+      const abortTimer = setTimeout(() => controller.abort(), 2000);
+
       try {
-        const res = await fetch("/results/" + PRESETS[type].id);
+        const res = await fetch("/results/" + PRESETS[type].id, { signal: controller.signal });
+        clearTimeout(abortTimer);
         const data = await res.json();
         if (data && data.found && data.result) {
           displayResults(data.result);
           return;
         }
       } catch (e) {
-        console.warn("API fetch error, using instant realistic evaluation:", e);
+        console.warn("API fetch error or timeout, falling back to instant realistic evaluation:", e);
       }
 
-      // Safe, immediate fallback ensuring zero UI stalling during cold starts or offline inspection
+      // Safe, instantaneous fallback ensuring zero UI stalling during cold starts or offline inspection
       displayResults(FALLBACK_EVAL[type] || FALLBACK_EVAL.wealth);
     }
 

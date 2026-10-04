@@ -225,11 +225,11 @@ class LLMJudge:
             raise ValueError(f"Unknown LLM provider: {self.provider}")
 
     def _call_claude(self, prompt: str) -> str:
-        """Call Anthropic Claude API."""
+        """Call Anthropic Claude API with strict timeout."""
         import anthropic
 
         if self._client is None:
-            self._client = anthropic.Anthropic(api_key=self.api_key)
+            self._client = anthropic.Anthropic(api_key=self.api_key, timeout=8.0)
 
         response = self._client.messages.create(
             model=self.model,
@@ -239,11 +239,11 @@ class LLMJudge:
         return response.content[0].text
 
     def _call_openai(self, prompt: str) -> str:
-        """Call OpenAI API."""
+        """Call OpenAI API with strict timeout."""
         import openai
 
         if self._client is None:
-            self._client = openai.OpenAI(api_key=self.api_key)
+            self._client = openai.OpenAI(api_key=self.api_key, timeout=8.0)
 
         response = self._client.chat.completions.create(
             model=self.model,
