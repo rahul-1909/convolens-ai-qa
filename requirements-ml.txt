@@ -1,0 +1,5 @@
+# Optional Heavy ML Packages for Offline Batch Clustering
+# (Run locally or in Docker with GPU/CPU PyTorch support)
+sentence-transformers>=3.1.0
+hdbscan>=0.8.38
+umap-learn>=0.5.6
