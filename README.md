@@ -96,9 +96,13 @@ convolens-ai-qa/
 │   └── taxonomy.yaml             # Complete failure taxonomy, rubric weights, and root causes
 ├── data/
 │   └── samples/
-│       └── sample_conversation.json # 15-turn BFSI loan collection benchmark conversation
+│       ├── bfsi_hardship_collection_call.json  # 9-turn hardship forbearance conversation
+│       ├── wealth_credit_onboarding_call.json   # 7-turn credit card onboarding conversation
+│       └── sample_conversation.json             # 15-turn BFSI benchmark conversation
 ├── docs/
 │   ├── architecture.md           # Detailed technical specifications and flowcharts
+│   ├── deployment.md             # Production deployment guide (Vercel, Docker, ECS, Cloud Run)
+│   ├── sample_evaluation_response.json # Production schema evaluation response JSON
 │   └── taxonomy.md               # Behavioral anchors and rubric reference tables
 ├── scripts/
 │   └── seed_sample.py            # Standalone demonstration and end-to-end evaluation runner
@@ -115,7 +119,7 @@ convolens-ai-qa/
 │   │   ├── hallucination.py      # Rule-based numeric & authority claim verification
 │   │   ├── llm_judge.py          # Claude/GPT structured Pydantic evaluation judge
 │   │   ├── pipeline.py           # Master evaluation pipeline & DB persistence orchestrator
-│   │   └── root_cause.py         # Deterministic root-cause decision attribution engine
+│   │   ├── root_cause.py         # Deterministic root-cause decision attribution engine
 │   │   └── rule_detectors.py     # Repetition, long silence, and low ASR confidence detectors
 │   ├── ingestion/
 │   │   └── normalizer.py         # Deepgram, Whisper, and simple transcript normalizer
@@ -145,6 +149,7 @@ convolens-ai-qa/
 │   └── test_rule_detectors.py    # String similarity and acoustic threshold tests
 ├── .env.example                  # Environment configuration template
 ├── .gitignore                    # Comprehensive Python and system gitignore
+├── CHANGELOG.md                  # Release history & feature changelog
 ├── DEVELOPMENT.md                # Local setup, API curl examples, and development guidelines
 ├── docker-compose.yml            # Multi-service setup (FastAPI + PostgreSQL)
 ├── Dockerfile                    # Production container build
@@ -188,7 +193,17 @@ pytest -v
 
 ---
 
-## 7. API Reference
+## 7. Production Deployment
+
+ConvoLens is engineered to run seamlessly across serverless (Vercel) and containerized clouds (Docker, AWS ECS Fargate, GCP Cloud Run).
+
+See the comprehensive [Production Deployment Guide](docs/deployment.md) for full setup instructions, environment variables, and health-check configurations.
+
+For schema specifications, inspect the [Sample Evaluation Response JSON](docs/sample_evaluation_response.json).
+
+---
+
+## 8. API Reference
 
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
@@ -200,6 +215,6 @@ pytest -v
 
 ---
 
-## 8. License
+## 9. License
 
 This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.

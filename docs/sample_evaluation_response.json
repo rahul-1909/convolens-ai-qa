@@ -1,0 +1,31 @@
+{
+  "conversation_id": "conv-loan-001",
+  "turns_evaluated": 7,
+  "overall_score": 3.2,
+  "rubric_scores": {
+    "accuracy": 2.5,
+    "empathy": 4.0,
+    "flow": 3.0,
+    "goal_completion": 2.8
+  },
+  "failures": [
+    {
+      "turn_id": 3,
+      "category": "L1-HAL",
+      "severity": "S1",
+      "root_cause": "kb_gap",
+      "evidence": "Agent quoted 12% APR but KB contains no such rate",
+      "agent_utterance": "Your rate will be 12% APR.",
+      "remediation": "Update KB with current rates or prompt to check system before quoting"
+    }
+  ],
+  "clusters": [
+    {
+      "cluster_id": 1,
+      "pattern": "Agent loses loan amount after tool timeout",
+      "frequency": 47,
+      "severity": "S1",
+      "estimated_impact": "Compliance risk across 47 conversations"
+    }
+  ]
+}
