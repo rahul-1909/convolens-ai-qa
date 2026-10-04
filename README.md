@@ -1,9 +1,13 @@
 # ConvoLens: Automated Quality Evaluation & Failure-Taxonomy Platform for Voice and Chat AI Agents
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-black?style=flat&logo=vercel)](https://convolens-ai-qa-phi.vercel.app/)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg)](https://fastapi.tiangolo.com)
 [![Pydantic v2](https://img.shields.io/badge/Pydantic-v2-E92063.svg)](https://docs.pydantic.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+> 🌐 **Live Interactive Showcase:** [https://convolens-ai-qa-phi.vercel.app/](https://convolens-ai-qa-phi.vercel.app/)  
+> Includes the dialogue inspector, PII redactor, rubric visualizer, failure badges, 7-layer RCA suggestions, and interactive Swagger API documentation.
 
 ---
 
@@ -32,7 +36,7 @@ Critical failure modes go completely undetected until customer churn or regulato
 * **Embeddings & Pattern Clustering**: `sentence-transformers` (`all-MiniLM-L6-v2`), HDBSCAN, UMAP
 * **Security & Privacy**: Zero-trust regex PII Masking Engine (Aadhaar, PAN, phone numbers, emails, payment cards)
 * **API & Service Delivery**: FastAPI, Uvicorn, Structlog, CORS middleware
-* **Deployment & Containers**: Docker, Docker Compose, GitHub Actions CI
+* **Deployment & Containers**: Docker, Docker Compose, GitHub Actions CI, Vercel Serverless
 
 ---
 
@@ -111,7 +115,7 @@ convolens-ai-qa/
 │   │   ├── hallucination.py      # Rule-based numeric & authority claim verification
 │   │   ├── llm_judge.py          # Claude/GPT structured Pydantic evaluation judge
 │   │   ├── pipeline.py           # Master evaluation pipeline & DB persistence orchestrator
-│   │   ├── root_cause.py         # Deterministic root-cause decision attribution engine
+│   │   └── root_cause.py         # Deterministic root-cause decision attribution engine
 │   │   └── rule_detectors.py     # Repetition, long silence, and low ASR confidence detectors
 │   ├── ingestion/
 │   │   └── normalizer.py         # Deepgram, Whisper, and simple transcript normalizer
