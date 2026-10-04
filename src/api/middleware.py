@@ -1,10 +1,9 @@
-"""API middleware — request logging, error handling, CORS."""
+"""API middleware — CORS, request logging, and global exception handling."""
 
 from __future__ import annotations
 
 import logging
 import time
-import traceback
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -14,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 def add_middleware(app: FastAPI) -> None:
-    """Attach all middleware to the FastAPI application.
+    """Attach middleware and exception handlers to the FastAPI app.
 
     Args:
         app: The FastAPI application instance.
@@ -35,7 +34,7 @@ def add_middleware(app: FastAPI) -> None:
         response = await call_next(request)
         elapsed = (time.perf_counter() - start) * 1000
         logger.info(
-            "%s %s → %d (%.1fms)",
+            "%s %s -> %d (%.1fms)",
             request.method,
             request.url.path,
             response.status_code,
@@ -51,12 +50,13 @@ def add_middleware(app: FastAPI) -> None:
             request.method,
             request.url.path,
             exc,
+            exc_info=True,
         )
-        logger.debug(traceback.format_exc())
         return JSONResponse(
             status_code=500,
             content={
-                "error": "internal_server_error",
+                "error": "Internal server error",
                 "detail": str(exc),
+                "path": request.url.path,
             },
         )
