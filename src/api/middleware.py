@@ -29,19 +29,25 @@ def add_middleware(app: FastAPI) -> None:
 
     @app.middleware("http")
     async def vercel_path_rewrite(request: Request, call_next):
-        """Map Vercel internal rewrite headers back to the original client request path."""
-        raw_path = (
-            request.headers.get("x-matched-path")
-            or request.headers.get("x-forwarded-uri")
-            or request.headers.get("x-vercel-matched-path")
-            or request.headers.get("x-original-uri")
-            or request.headers.get("x-rewrite-url")
-            or request.query_params.get("__path")
-        )
-        if raw_path and raw_path not in ("/api/index.py", "/api/index", "/api"):
-            request.scope["path"] = raw_path.split("?")[0]
+        """Map Vercel internal rewrite headers/params back to the original client request path."""
+        target_path = request.query_params.get("__path")
+        if not target_path:
+            raw = (
+                request.headers.get("x-matched-path")
+                or request.headers.get("x-forwarded-uri")
+                or request.headers.get("x-vercel-matched-path")
+                or request.headers.get("x-original-uri")
+                or request.headers.get("x-rewrite-url")
+            )
+            if raw and raw not in ("/api/index.py", "/api/index", "/api"):
+                target_path = raw
+
+        if target_path:
+            clean_path = "/" + target_path.lstrip("/").split("?")[0]
+            request.scope["path"] = clean_path
         elif request.scope.get("path") in ("/api/index.py", "/api/index", "/api"):
             request.scope["path"] = "/"
+
         return await call_next(request)
 
     @app.middleware("http")
