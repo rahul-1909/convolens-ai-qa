@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: convolens-ai-qa
+    runtime: docker
+    plan: free
+    region: oregon
+    branch: main
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: LOG_LEVEL
+        value: INFO
+      - key: DATABASE_URL
+        value: sqlite:///./convolens.db
+      - key: PII_MASKING_ENABLED
+        value: "true"
+      - key: LLM_PROVIDER
+        value: claude
+      - key: LLM_MODEL
+        value: claude-sonnet-4-20250514
+      # Optional: Add your keys in Render dashboard if you want live Claude/GPT calls
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
