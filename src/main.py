@@ -64,6 +64,9 @@ app.include_router(trends_router)
 
 
 @app.get("/", response_class=HTMLResponse, tags=["dashboard"])
+@app.get("/api", response_class=HTMLResponse, tags=["dashboard"])
+@app.get("/api/index", response_class=HTMLResponse, tags=["dashboard"])
+@app.get("/api/index.py", response_class=HTMLResponse, tags=["dashboard"])
 def root():
     """Single unified showcase dashboard with live interactive evaluation."""
     if _STATIC_INDEX.exists():
@@ -74,6 +77,7 @@ def root():
 
 
 @app.get("/health", response_model=HealthResponse, tags=["health"])
+@app.get("/api/health", response_model=HealthResponse, tags=["health"])
 def health_check():
     """Health check endpoint for load balancers and monitoring."""
     return HealthResponse(
