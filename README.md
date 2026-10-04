@@ -153,30 +153,34 @@ convolens-ai-qa/
 
 ---
 
-## 6. Quick Start
+## 6. Quick Start & Live Demo
 
-### 1. Run the Evaluation Pipeline on Sample Data
+### 🚀 Instant Live Demo (No Setup Required)
+Open the deployed showcase platform directly in your browser:
+* **Interactive UI Playground:** [https://convolens-ai-qa-phi.vercel.app/](https://convolens-ai-qa-phi.vercel.app/)
+* **Live Interactive Swagger Docs:** [https://convolens-ai-qa-phi.vercel.app/docs](https://convolens-ai-qa-phi.vercel.app/docs)
+
+---
+
+### Local Development Setup
 
 ```bash
-# Set up environment
+# 1. Set up virtual environment
 python -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 
-# Run the end-to-end evaluation demo
+# 2. Run the end-to-end evaluation demo script
 python -m scripts.seed_sample
-```
 
-### 2. Start the API Server
-
-```bash
+# 3. Start the API server
 uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-Open interactive Swagger API documentation in your browser:
-**`http://localhost:8000/docs`**
+* Local Dashboard: `http://localhost:8000/`
+* Local Swagger Docs: `http://localhost:8000/docs`
 
-### 3. Run the Test Suite
+### Run the Test Suite
 
 ```bash
 pytest -v
