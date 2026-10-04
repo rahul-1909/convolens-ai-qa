@@ -1,4 +1,4 @@
-"""API middleware — CORS, request logging, and global exception handling."""
+"""API middleware — CORS, request logging, Vercel routing, and global exception handling."""
 
 from __future__ import annotations
 
@@ -26,6 +26,23 @@ def add_middleware(app: FastAPI) -> None:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    @app.middleware("http")
+    async def vercel_path_rewrite(request: Request, call_next):
+        """Map Vercel internal rewrite headers back to the original client request path."""
+        raw_path = (
+            request.headers.get("x-matched-path")
+            or request.headers.get("x-forwarded-uri")
+            or request.headers.get("x-vercel-matched-path")
+            or request.headers.get("x-original-uri")
+            or request.headers.get("x-rewrite-url")
+            or request.query_params.get("__path")
+        )
+        if raw_path and raw_path not in ("/api/index.py", "/api/index", "/api"):
+            request.scope["path"] = raw_path.split("?")[0]
+        elif request.scope.get("path") in ("/api/index.py", "/api/index", "/api"):
+            request.scope["path"] = "/"
+        return await call_next(request)
 
     @app.middleware("http")
     async def log_requests(request: Request, call_next):

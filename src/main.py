@@ -51,7 +51,7 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
-# Attach middleware
+# Attach middleware (CORS, Vercel rewrite handler, request logger, error handling)
 add_middleware(app)
 
 # Register route modules
@@ -66,7 +66,6 @@ app.include_router(trends_router)
 @app.get("/", response_class=HTMLResponse, tags=["dashboard"])
 @app.get("/api", response_class=HTMLResponse, tags=["dashboard"])
 @app.get("/api/index", response_class=HTMLResponse, tags=["dashboard"])
-@app.get("/api/index.py", response_class=HTMLResponse, tags=["dashboard"])
 def root():
     """Single unified showcase dashboard with live interactive evaluation."""
     if _STATIC_INDEX.exists():
