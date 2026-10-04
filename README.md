@@ -160,7 +160,7 @@ convolens-ai-qa/
 
 ## 6. Quick Start & Live Demo
 
-### 🚀 Instant Live Demo (No Setup Required)
+### Instant Live Demo (No Setup Required)
 Open the deployed showcase platform directly in your browser:
 * **Interactive UI Playground:** [https://convolens-ai-qa-phi.vercel.app/](https://convolens-ai-qa-phi.vercel.app/)
 * **Live Interactive Swagger Docs:** [https://convolens-ai-qa-phi.vercel.app/docs](https://convolens-ai-qa-phi.vercel.app/docs)
