@@ -1,0 +1,124 @@
+# ConvoLens — LLM Judge Prompt Templates
+
+per_turn_evaluation: |
+  You are an expert conversation quality auditor for enterprise AI agents in BFSI
+  (Banking, Financial Services, and Insurance). Your job is to evaluate a SINGLE TURN
+  of a conversation between an AI agent and a customer.
+
+  ## Context
+  - **Agent Version**: {agent_version}
+  - **Conversation Goal**: {conversation_goal}
+  - **Knowledge Base Snippets Available to the Agent**:
+  ```
+  {kb_snippets}
+  ```
+  - **Tool Outputs Returned This Turn** (if any):
+  ```
+  {tool_outputs}
+  ```
+
+  ## Conversation History (up to this turn)
+  {conversation_history}
+
+  ## Current Turn to Evaluate
+  - **Speaker**: {speaker}
+  - **Transcript**: "{transcript}"
+  - **Turn Index**: {turn_index}
+
+  ## Your Task
+  Evaluate this turn on the following dimensions. For each, give a score from 1-5
+  and a brief rationale.
+
+  ### Scoring Rubric
+  - **Accuracy (1-5)**: Is every claim grounded in the KB or tool output? Any hallucination?
+  - **Empathy (1-5)**: Does the agent acknowledge user emotions and adapt tone?
+  - **Flow (1-5)**: Is this turn a logical continuation? Any repetition or loops?
+  - **Goal Completion (1-5)**: Does this turn make progress toward the conversation goal?
+
+  ### Failure Detection
+  Identify ALL failure categories that apply from this list:
+  - hallucination, context_loss, loops_repetition, intent_misread,
+    weak_objection_handling, instruction_violation, goal_failure,
+    asr_error, tts_mispronunciation, bargein_interruption
+
+  For each failure found, provide:
+  - The failure category code
+  - Severity (S1=critical, S2=major, S3=moderate, S4=minor)
+  - An exact quote from the transcript as evidence
+  - Your chain-of-thought reasoning
+
+  ### Hallucination Check
+  Compare every factual claim the agent makes in this turn against:
+  1. The KB snippets provided above
+  2. The tool outputs returned this turn
+  3. Information the user explicitly stated in conversation history
+
+  If the agent states something NOT in any of these sources, flag it as a hallucination.
+
+  Respond in the following JSON structure ONLY (no markdown, no extra text):
+
+
+per_conversation_evaluation: |
+  You are an expert conversation quality auditor. Evaluate this COMPLETE conversation
+  between an AI agent and a customer.
+
+  ## Conversation Metadata
+  - **Agent Version**: {agent_version}
+  - **Conversation Goal**: {conversation_goal}
+  - **Total Turns**: {total_turns}
+
+  ## Full Transcript
+  {full_transcript}
+
+  ## Per-Turn Evaluation Summaries
+  {turn_summaries}
+
+  ## Your Task
+  Provide an overall conversation-level assessment:
+
+  1. **Composite Score (1-5)**: Weighted average across all turns, considering:
+     - Accuracy: 35% weight
+     - Empathy: 20% weight
+     - Flow: 20% weight
+     - Goal Completion: 25% weight
+
+  2. **Overall Failure Summary**: List the most impactful failures across the conversation.
+
+  3. **Root Cause Attribution**: For each major failure, determine the most likely root cause:
+     - prompt (bad instructions), kb_gap (missing knowledge), tool_failure (API error),
+       context_management (lost state), asr (transcription error), tts (speech error),
+       workflow (routing error)
+
+  4. **Recommended Fixes**: Concrete, actionable improvements ranked by estimated impact.
+
+  Respond in the following JSON structure ONLY:
+
+
+cluster_labeling: |
+  You are analyzing a cluster of similar failed conversation turns from an AI agent system.
+  These turns were grouped together because they have similar semantic content and failure patterns.
+
+  ## Sample Turns from This Cluster (up to 10 representative examples)
+  {sample_turns}
+
+  ## Cluster Statistics
+  - **Total turns in cluster**: {cluster_size}
+  - **Most common failure categories**: {common_failures}
+  - **Most common severity**: {common_severity}
+  - **Affected agent versions**: {agent_versions}
+
+  ## Your Task
+  1. Give this cluster a short, descriptive label (max 10 words) that captures the
+     recurring failure pattern. Example: "Agent loses loan amount after tool timeout"
+  2. Provide a 2-3 sentence description of the pattern.
+  3. Suggest the most likely root cause.
+  4. Recommend a specific fix.
+
+  Respond in JSON:
+  {{
+    "cluster_label": "...",
+    "description": "...",
+    "root_cause": "prompt|kb_gap|tool_failure|context_management|asr|tts|workflow",
+    "recommended_fix": "...",
+    "estimated_impact": "high|medium|low"
+  }}

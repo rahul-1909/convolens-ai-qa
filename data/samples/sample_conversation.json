@@ -1,0 +1,245 @@
+{
+  "conversation_id": "sample-loan-collection-001",
+  "customer_id": "CUST-9876",
+  "agent_version": "v2.4.1",
+  "prompt_version": "prompt-v3.2",
+  "conversation_goal": "loan_collection",
+  "channel": "voice",
+  "language": "en",
+  "started_at": "2026-10-01T10:30:00",
+  "ended_at": "2026-10-01T10:35:42",
+  "metadata": {
+    "campaign": "Q4_collections",
+    "loan_type": "personal_loan"
+  },
+  "turns": [
+    {
+      "turn_id": "t-001",
+      "turn_index": 0,
+      "speaker": "agent",
+      "transcript": "Good morning! Am I speaking with Mr. Sharma? This is calling from ABC Finance regarding your personal loan account.",
+      "timestamp": "2026-10-01T10:30:00",
+      "duration_ms": 4200,
+      "asr_confidence": 0.95,
+      "tool_calls": [],
+      "kb_snippets": [
+        "Greeting script: Always confirm customer identity before discussing account details."
+      ]
+    },
+    {
+      "turn_id": "t-002",
+      "turn_index": 1,
+      "speaker": "customer",
+      "transcript": "Yes, this is Sharma speaking. What is this regarding?",
+      "timestamp": "2026-10-01T10:30:05",
+      "duration_ms": 2800,
+      "asr_confidence": 0.92,
+      "tool_calls": [],
+      "kb_snippets": []
+    },
+    {
+      "turn_id": "t-003",
+      "turn_index": 2,
+      "speaker": "agent",
+      "transcript": "Thank you for confirming, Mr. Sharma. I'm calling about your personal loan with account number ending 4521. Our records show that your EMI payment of Rs. 15,000 was due on September 25th and is currently overdue. Could you help me understand if there's been any difficulty with the payment?",
+      "timestamp": "2026-10-01T10:30:08",
+      "duration_ms": 9500,
+      "asr_confidence": 0.97,
+      "tool_calls": [
+        {
+          "tool_name": "fetch_account_details",
+          "input_payload": {"customer_id": "CUST-9876"},
+          "output_payload": {
+            "account_number": "PL-XXXX-4521",
+            "emi_amount": 15000,
+            "due_date": "2026-09-25",
+            "days_overdue": 6,
+            "outstanding_balance": 245000
+          },
+          "success": true,
+          "latency_ms": 120
+        }
+      ],
+      "kb_snippets": [
+        "Collection script: After identity confirmation, state the overdue amount and due date. Ask if there are any difficulties."
+      ]
+    },
+    {
+      "turn_id": "t-004",
+      "turn_index": 3,
+      "speaker": "customer",
+      "transcript": "Actually, I lost my job last month and I'm having trouble making payments right now. Can you give me some more time?",
+      "timestamp": "2026-10-01T10:30:18",
+      "duration_ms": 5200,
+      "asr_confidence": 0.88,
+      "tool_calls": [],
+      "kb_snippets": []
+    },
+    {
+      "turn_id": "t-005",
+      "turn_index": 4,
+      "speaker": "agent",
+      "transcript": "I understand that must be a difficult situation, Mr. Sharma. I'm sorry to hear about your job loss. Let me check what options we have available for you. We do have a hardship program that might help. Would you be interested in exploring a revised payment plan?",
+      "timestamp": "2026-10-01T10:30:24",
+      "duration_ms": 8100,
+      "asr_confidence": 0.96,
+      "tool_calls": [],
+      "kb_snippets": [
+        "Hardship policy: Customers facing financial hardship may be eligible for EMI restructuring. Offer 3-month moratorium or reduced EMI for 6 months.",
+        "Empathy guidelines: Acknowledge the customer's situation before presenting solutions."
+      ]
+    },
+    {
+      "turn_id": "t-006",
+      "turn_index": 5,
+      "speaker": "customer",
+      "transcript": "Yes, that would be really helpful. What kind of options do you have?",
+      "timestamp": "2026-10-01T10:30:33",
+      "duration_ms": 3100,
+      "asr_confidence": 0.91,
+      "tool_calls": [],
+      "kb_snippets": []
+    },
+    {
+      "turn_id": "t-007",
+      "turn_index": 6,
+      "speaker": "agent",
+      "transcript": "Sure, Mr. Sharma. Based on your account history, which has been excellent until now, I can offer you two options. First, a three-month moratorium where we pause your EMIs entirely. Second, we can reduce your EMI to Rs. 8,000 for the next six months by extending your loan tenure. Your interest rate of 11.5% would remain unchanged in both cases. Which option sounds better for your situation?",
+      "timestamp": "2026-10-01T10:30:37",
+      "duration_ms": 14200,
+      "asr_confidence": 0.94,
+      "tool_calls": [
+        {
+          "tool_name": "get_restructuring_options",
+          "input_payload": {"account_number": "PL-XXXX-4521", "reason": "job_loss"},
+          "output_payload": {
+            "options": [
+              {"type": "moratorium", "duration_months": 3, "conditions": "Interest accrues during moratorium"},
+              {"type": "reduced_emi", "new_emi": 8500, "duration_months": 6, "tenure_extension": 4}
+            ],
+            "current_interest_rate": 11.5,
+            "eligibility": "approved"
+          },
+          "success": true,
+          "latency_ms": 230
+        }
+      ],
+      "kb_snippets": [
+        "Restructuring policy: Present both moratorium and reduced EMI options. Clearly state interest rate implications.",
+        "Compliance: Must disclose that interest accrues during moratorium period."
+      ]
+    },
+    {
+      "turn_id": "t-008",
+      "turn_index": 7,
+      "speaker": "customer",
+      "transcript": "Wait, you said Rs. 8,000 but I want to make sure. Is that the exact reduced amount?",
+      "timestamp": "2026-10-01T10:30:52",
+      "duration_ms": 3800,
+      "asr_confidence": 0.90,
+      "tool_calls": [],
+      "kb_snippets": []
+    },
+    {
+      "turn_id": "t-009",
+      "turn_index": 8,
+      "speaker": "agent",
+      "transcript": "I apologize for the confusion. Let me double-check. The exact reduced EMI amount would be Rs. 8,500 per month for six months, with a four-month tenure extension. I should have been more precise earlier. Also, I want to make sure you're aware that during the moratorium option, interest would continue to accrue on the outstanding balance.",
+      "timestamp": "2026-10-01T10:30:56",
+      "duration_ms": 11500,
+      "asr_confidence": 0.96,
+      "tool_calls": [],
+      "kb_snippets": [
+        "Compliance: Must disclose that interest accrues during moratorium period."
+      ]
+    },
+    {
+      "turn_id": "t-010",
+      "turn_index": 9,
+      "speaker": "customer",
+      "transcript": "Okay, I think the reduced EMI option works better for me. Let's go with Rs. 8,500 for six months.",
+      "timestamp": "2026-10-01T10:31:08",
+      "duration_ms": 4200,
+      "asr_confidence": 0.93,
+      "tool_calls": [],
+      "kb_snippets": []
+    },
+    {
+      "turn_id": "t-011",
+      "turn_index": 10,
+      "speaker": "agent",
+      "transcript": "Excellent choice, Mr. Sharma. I'm processing the reduced EMI plan now. Your new EMI of Rs. 8,500 will start from November 2026, and your loan tenure will be extended by four months. You will receive an SMS confirmation shortly. For the current overdue amount, could you make the payment of Rs. 15,000 by October 10th?",
+      "timestamp": "2026-10-01T10:31:13",
+      "duration_ms": 12800,
+      "asr_confidence": 0.95,
+      "tool_calls": [
+        {
+          "tool_name": "process_restructuring",
+          "input_payload": {
+            "account_number": "PL-XXXX-4521",
+            "option": "reduced_emi",
+            "new_emi": 8500,
+            "duration_months": 6
+          },
+          "output_payload": {
+            "status": "approved",
+            "effective_date": "2026-11-01",
+            "confirmation_id": "RST-20261001-7743",
+            "sms_sent": true
+          },
+          "success": true,
+          "latency_ms": 340
+        }
+      ],
+      "kb_snippets": [
+        "After restructuring approval: Confirm new terms, request current overdue payment, set a deadline."
+      ]
+    },
+    {
+      "turn_id": "t-012",
+      "turn_index": 11,
+      "speaker": "customer",
+      "transcript": "Yes, I can manage that. Thank you for being understanding about my situation.",
+      "timestamp": "2026-10-01T10:31:27",
+      "duration_ms": 3500,
+      "asr_confidence": 0.94,
+      "tool_calls": [],
+      "kb_snippets": []
+    },
+    {
+      "turn_id": "t-013",
+      "turn_index": 12,
+      "speaker": "agent",
+      "transcript": "You're welcome, Mr. Sharma. To summarize: your EMI is now Rs. 8,500 starting November, your confirmation number is RST-20261001-7743, and we'll expect the current overdue payment of Rs. 15,000 by October 10th. Is there anything else I can help you with today?",
+      "timestamp": "2026-10-01T10:31:31",
+      "duration_ms": 10500,
+      "asr_confidence": 0.97,
+      "tool_calls": [],
+      "kb_snippets": [
+        "Closing script: Summarize all agreed actions and provide confirmation details before ending."
+      ]
+    },
+    {
+      "turn_id": "t-014",
+      "turn_index": 13,
+      "speaker": "customer",
+      "transcript": "No, that's all. Thanks again.",
+      "timestamp": "2026-10-01T10:31:42",
+      "duration_ms": 1800,
+      "asr_confidence": 0.96,
+      "tool_calls": [],
+      "kb_snippets": []
+    },
+    {
+      "turn_id": "t-015",
+      "turn_index": 14,
+      "speaker": "agent",
+      "transcript": "Thank you, Mr. Sharma. I wish you all the best and hope things improve soon. Have a great day!",
+      "timestamp": "2026-10-01T10:31:44",
+      "duration_ms": 4500,
+      "asr_confidence": 0.98,
+      "tool_calls": [],
+      "kb_snippets": []
+    }
+  ]
+}

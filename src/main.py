@@ -1,0 +1,83 @@
+"""ConvoLens — FastAPI application entry point.
+
+Run with:
+    uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
+"""
+
+from __future__ import annotations
+
+from contextlib import asynccontextmanager
+from datetime import datetime, timezone
+
+from fastapi import FastAPI
+
+from src import __version__
+from src.config import get_settings
+from src.db.session import init_db
+from src.utils.logging import setup_logging
+from src.api.middleware import add_middleware
+from src.api.routes.evaluation import router as evaluation_router
+from src.api.routes.results import router as results_router
+from src.api.routes.trends import router as trends_router
+from src.schemas.api import HealthResponse
+
+# ── Setup ────────────────────────────────────────────────────────────────────
+
+setup_logging()
+_settings = get_settings()
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Application startup and shutdown lifecycle."""
+    # Startup: create database tables
+    init_db()
+    yield
+    # Shutdown: cleanup resources if needed
+
+
+# ── App Factory ──────────────────────────────────────────────────────────────
+
+app = FastAPI(
+    title="ConvoLens",
+    description=(
+        "Automated Quality Evaluation & Failure-Taxonomy Platform "
+        "for Voice and Chat AI Agents"
+    ),
+    version=__version__,
+    lifespan=lifespan,
+    docs_url="/docs",
+    redoc_url="/redoc",
+)
+
+# Attach middleware
+add_middleware(app)
+
+# Register route modules
+app.include_router(evaluation_router)
+app.include_router(results_router)
+app.include_router(trends_router)
+
+
+# ── Root / Health ────────────────────────────────────────────────────────────
+
+
+@app.get("/", tags=["health"])
+def root():
+    """Landing redirect to docs."""
+    return {
+        "app": "ConvoLens",
+        "version": __version__,
+        "docs": "/docs",
+    }
+
+
+@app.get("/health", response_model=HealthResponse, tags=["health"])
+def health_check():
+    """Health check endpoint for load balancers and monitoring."""
+    return HealthResponse(
+        status="healthy",
+        version=__version__,
+        database="connected",
+        timestamp=datetime.now(timezone.utc),
+    )

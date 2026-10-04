@@ -1,0 +1,206 @@
+# ConvoLens — Failure Taxonomy Configuration
+# Two-level taxonomy with severity scales (S1-S4)
+# S1: Critical (conversation fails)  S2: Major (goal at risk)
+# S3: Moderate (poor experience)     S4: Minor (cosmetic / low impact)
+
+taxonomy:
+  level_1:
+    hallucination:
+      code: "L1-HAL"
+      description: "Agent states facts not grounded in the knowledge base, tool outputs, or conversation context."
+      severity_default: S1
+      subtypes:
+        - factual_fabrication       # Inventing data (rates, dates, names)
+        - policy_misstatement       # Stating wrong policy/procedure
+        - capability_hallucination  # Claiming abilities the system lacks
+        - numerical_error           # Wrong calculation or number
+
+    context_loss:
+      code: "L1-CTX"
+      description: "Agent loses or contradicts information the user already provided in the conversation."
+      severity_default: S2
+      subtypes:
+        - forgotten_slot            # Forgets a value user already gave
+        - contradicted_self         # States X then later states not-X
+        - ignored_correction        # User corrects agent, agent ignores
+        - wrong_reference           # References wrong entity or prior turn
+
+    loops_repetition:
+      code: "L1-LOOP"
+      description: "Agent repeats the same question, phrase, or action without progress."
+      severity_default: S2
+      subtypes:
+        - question_repeat           # Asks same question again
+        - phrase_repeat             # Says near-identical sentence
+        - action_loop               # Tries the same tool call repeatedly
+        - stuck_state               # No forward progress for 3+ turns
+
+    intent_misread:
+      code: "L1-INT"
+      description: "Agent misinterprets the user's intent or request."
+      severity_default: S2
+      subtypes:
+        - wrong_intent_classification
+        - partial_intent_capture    # Captures one part, misses another
+        - premature_routing         # Routes to wrong flow too early
+        - missed_implicit_intent    # Misses what user clearly implies
+
+    weak_objection_handling:
+      code: "L1-OBJ"
+      description: "Agent fails to address user concerns, objections, or hesitations."
+      severity_default: S3
+      subtypes:
+        - ignored_objection
+        - generic_response          # Cookie-cutter reply to specific concern
+        - premature_escalation      # Escalates instead of handling
+        - missed_buying_signal      # Fails to act on positive signals
+
+    instruction_violation:
+      code: "L1-INS"
+      description: "Agent violates its system prompt rules, compliance scripts, or mandatory disclosures."
+      severity_default: S1
+      subtypes:
+        - skipped_disclosure        # Required disclosure not given
+        - wrong_script_order        # Mandatory steps out of order
+        - unauthorized_promise      # Promises something not allowed
+        - tone_violation            # Inappropriate register or language
+
+    goal_failure:
+      code: "L1-GOAL"
+      description: "Conversation ends without achieving the intended business goal."
+      severity_default: S1
+      subtypes:
+        - incomplete_collection     # Missing required data at end
+        - false_completion          # Agent says done but isn't
+        - premature_termination     # Conversation cut short
+        - wrong_outcome             # Achieved wrong goal entirely
+
+  level_2:
+    asr_error:
+      code: "L2-ASR"
+      description: "Automatic speech recognition produced incorrect transcription."
+      severity_default: S3
+      subtypes:
+        - homophone_confusion       # "two" vs "to" in critical context
+        - name_garbling             # Proper nouns badly transcribed
+        - number_error              # Digits / amounts wrong
+        - language_switch_miss      # Code-switching not captured
+
+    tts_mispronunciation:
+      code: "L2-TTS"
+      description: "Text-to-speech output mispronounces words affecting comprehension."
+      severity_default: S3
+      subtypes:
+        - name_mispronunciation
+        - number_mispronunciation
+        - acronym_error
+        - language_mismatch         # Wrong language model used
+
+    bargein_interruption:
+      code: "L2-BARG"
+      description: "Turn-taking failures: agent talks over user or ignores barge-in."
+      severity_default: S3
+      subtypes:
+        - ignored_bargein           # User tries to interrupt, agent continues
+        - premature_cutoff          # Agent cuts user off mid-sentence
+        - silence_timeout           # Agent times out too quickly
+        - overlap_confusion         # Both speak, neither understood
+
+
+# =============================================================================
+# Scoring Rubric  (1-5 scale per dimension)
+# =============================================================================
+rubric:
+  dimensions:
+    accuracy:
+      weight: 0.35
+      anchors:
+        5: "Every claim fully grounded in KB/tool output. Zero factual errors."
+        4: "All key facts correct. Minor omission that doesn't mislead."
+        3: "Mostly correct but one meaningful error or unsupported claim."
+        2: "Multiple errors or one critical hallucination."
+        1: "Pervasive fabrication; user would be materially misled."
+
+    empathy:
+      weight: 0.20
+      anchors:
+        5: "Acknowledges emotions, adapts tone, demonstrates genuine understanding."
+        4: "Generally warm and responsive. Minor miss in emotional cue."
+        3: "Neutral tone. Functional but no emotional intelligence shown."
+        2: "Dismissive or tone-deaf to user frustration or concern."
+        1: "Actively antagonistic, rude, or completely ignores distress."
+
+    flow:
+      weight: 0.20
+      anchors:
+        5: "Smooth, logical progression. No loops, no redundancy, efficient."
+        4: "Minor repetition or one unnecessary clarification. Still smooth."
+        3: "Noticeable friction: one loop or awkward transition."
+        2: "Multiple loops or disjointed sequence. User has to repeat info."
+        1: "Stuck in a loop or conversation is incoherent."
+
+    goal_completion:
+      weight: 0.25
+      anchors:
+        5: "Primary and secondary goals fully achieved. All data collected."
+        4: "Primary goal achieved. One minor secondary objective missed."
+        3: "Partial completion. Key information collected but outcome unclear."
+        2: "Goal not achieved despite being achievable. Major miss."
+        1: "Complete failure. Conversation adds no value toward the goal."
+
+  # Composite score = weighted sum of dimension scores
+  composite_formula: "sum(dimension_score * dimension_weight)"
+
+
+# =============================================================================
+# Root-Cause Attribution Layers
+# =============================================================================
+root_cause_layers:
+  - code: "RC-PROMPT"
+    name: "Prompt / Instructions"
+    description: "Failure caused by ambiguous, missing, or conflicting instructions in the system prompt."
+    signals:
+      - "Agent had correct KB data but responded incorrectly"
+      - "Agent violated a rule that is vaguely defined in prompt"
+
+  - code: "RC-KB"
+    name: "Knowledge Base Gap"
+    description: "The required information was not present in the knowledge base."
+    signals:
+      - "Agent could not answer because KB lacks the fact"
+      - "KB has outdated information"
+
+  - code: "RC-TOOL"
+    name: "Tool / API Failure"
+    description: "An external tool call failed, timed out, or returned incorrect data."
+    signals:
+      - "Tool returned error status"
+      - "Tool response was malformed or empty"
+
+  - code: "RC-CONTEXT"
+    name: "Context Management"
+    description: "The LLM lost track of conversation state or slot values."
+    signals:
+      - "User provided value but agent asked again"
+      - "Context window overflow suspected"
+
+  - code: "RC-ASR"
+    name: "ASR / Speech Recognition"
+    description: "The spoken words were incorrectly transcribed."
+    signals:
+      - "Low ASR confidence on critical turn"
+      - "Homophones in financial context"
+
+  - code: "RC-TTS"
+    name: "TTS / Speech Synthesis"
+    description: "The text-to-speech layer mispronounced or garbled output."
+    signals:
+      - "User complained about pronunciation"
+      - "Repeated 'what?' after agent spoke"
+
+  - code: "RC-WORKFLOW"
+    name: "Workflow / Orchestration"
+    description: "The conversation flow or state machine routed incorrectly."
+    signals:
+      - "Agent jumped to wrong stage"
+      - "Handoff or escalation was premature or missing"
